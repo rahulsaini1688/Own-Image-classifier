@@ -1,6 +1,7 @@
 from get_input_args import get_input_args
 import torch
 from torchvision import datasets,transforms,models
+import torchvision.models as models
 import numpy as np
 from torch import nn,optim
 import helper
@@ -12,13 +13,13 @@ import json
 #import matplotlib.pyplot as plt
 
 
+
 args = get_input_args()
 data_dir = args.data_dir
 checkpoint_dir = args.save_dir
 train_model = args.arch
 train_lr = args.learning_rate
 train_epochs = args.epochs
-
 train_hidden = args.hidden_layer
 train_device = args.gpu
 
@@ -56,7 +57,8 @@ with open('ImageClassifier/cat_to_name.json', 'r') as f:
     cat_to_name = json.load(f)
     
 device = torch.device("cuda" if (torch.cuda.is_available() and train_device is "gpu")  else "cpu")
-model=  models.vgg11(pretrained=True) 
+#model=  models.vgg11(pretrained=True) 
+model = getattr(models, args.arch)(pretrained=True)
 
 
 
@@ -163,8 +165,3 @@ checkpoint = {
               'state_optimizer': optimizer.state_dict()
 }
 torch.save(checkpoint,'checkpoint.pth')
-
-
-
-
-
